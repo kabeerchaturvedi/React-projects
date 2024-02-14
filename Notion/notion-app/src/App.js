@@ -41,11 +41,16 @@ const Column = ({ title, headingColor, column, cards, setCards }) => {
 };
 
 const Card = ({ title, id, column }) => {
-  <>
-    <div>
-      <p className="text-sm text-neutral-500">{title}</p>
-    </div>
-  </>;
+  return (
+    <>
+      <div
+        draggable="true"
+        className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
+      >
+        <p className="text-sm text-neutral-100">{title}</p>
+      </div>
+    </>
+  );
 };
 
 export default App;
