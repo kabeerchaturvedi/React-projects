@@ -1,5 +1,7 @@
 import { useState } from "react";
 import DEFAULT_CARDS from "./data";
+import { FaFire } from "react-icons/fa";
+import {FaTrash} from 'react-icons/fa'
 
 const App = () => {
   return (
@@ -18,10 +20,23 @@ const Board = () => {
       <Column title="TODO" column="todo" headingColor="text-yellow-200" cards={cards} setCards={setCards} />
       <Column title="In Progress" column="doing" headingColor="text-blue-200" cards={cards} setCards={setCards} />
       <Column title="Complete" column="done" headingColor="text-emarald-200" cards={cards} setCards={setCards} />
+      <RemoveTasks setCards={setCards} />
     </div>
   );
 };
 
+const RemoveTasks = ({ setCards }) => {
+  const [active, setActive] = useState(false);
+  return (
+    <div
+      className={`mt-10 grid h-56 w-56 shrink-0 place-content-center rounded border text-3xl ${
+        active ? "border-red-800 bg-red-800/20 text-red-500" : "border-neutral-500 bg-neutral-500/20 text-neutral-500"
+      }`}
+    >
+      {active ? <FaFire className="animate-bounce" /> : <FaTrash />}
+    </div>
+  );
+};
 const Column = ({ title, headingColor, column, cards, setCards }) => {
   const [active, setActive] = useState(false);
   const filteredCards = cards.filter((c) => c.column === column);
@@ -35,6 +50,7 @@ const Column = ({ title, headingColor, column, cards, setCards }) => {
         {filteredCards.map((c) => {
           return <Card key={c.id} {...c} />;
         })}
+        <DropIndicator beforeId="-1" column={column} />
       </div>
     </div>
   );
@@ -43,6 +59,7 @@ const Column = ({ title, headingColor, column, cards, setCards }) => {
 const Card = ({ title, id, column }) => {
   return (
     <>
+      <DropIndicator beforeId={id} column={column} />
       <div
         draggable="true"
         className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
@@ -50,6 +67,16 @@ const Card = ({ title, id, column }) => {
         <p className="text-sm text-neutral-100">{title}</p>
       </div>
     </>
+  );
+};
+
+const DropIndicator = ({ beforeId, column }) => {
+  return (
+    <div
+      data-before={beforeId || -1}
+      data-column={column}
+      className="my-0.5 h-0.5 w-full bg-violet-400 opacity-0 "
+    ></div>
   );
 };
 
