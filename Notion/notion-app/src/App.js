@@ -1,7 +1,8 @@
 import { useState } from "react";
 import DEFAULT_CARDS from "./data";
 import { FaFire } from "react-icons/fa";
-import {FaTrash} from 'react-icons/fa'
+import { FaTrash } from "react-icons/fa";
+import { FiPlus } from "react-icons/fi";
 
 const App = () => {
   return (
@@ -51,8 +52,36 @@ const Column = ({ title, headingColor, column, cards, setCards }) => {
           return <Card key={c.id} {...c} />;
         })}
         <DropIndicator beforeId="-1" column={column} />
+        <AddCard column={column} setCards={setCards} />
       </div>
     </div>
+  );
+};
+
+const AddCard = ({ column, setCards }) => {
+  const [text, setText] = useState("");
+  const [adding, setAdding] = useState(false);
+  return (
+    <>
+      {adding ? (
+        <form>
+          <textarea
+            onChange={(e) => setText(e.target.value)}
+            autoFocus
+            placeholder="Add new Task"
+            className="w-full rounded border border-violet-400 bg-violet-400/20 p-3 text-sm text-neutral-50 placeholder-violet-300 focus:outline-0"
+          />
+        </form>
+      ) : (
+        <button
+          onClick={() => setAdding(true)}
+          className="flex w-full items-center gap-1.5 px-3 py-1.5 text-xs text-neutral-400 transition-colors hover:text-neutral-50"
+        >
+          <span>Add Card</span>
+          <FiPlus />
+        </button>
+      )}
+    </>
   );
 };
 
