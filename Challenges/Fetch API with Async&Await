@@ -1,0 +1,25 @@
+import { useEffect } from 'react'
+
+import './App.css'
+
+function App() {
+	useEffect(() => {
+		fetchUsers(API)
+	}, [])
+
+	const API = 'https://jsonplaceholder.typicode.com/users'
+
+	const fetchUsers = async (API) => {
+		try {
+			const response = await fetch(API)
+			const data = await response.json()
+			console.log(data)
+		} catch (error) {
+			console.log(error.message)
+		}
+	}
+
+	return <div>API RESULT</div>
+}
+
+export default App
