@@ -1,0 +1,18 @@
+import React, { useRef, useState } from 'react';
+
+export function App() {
+  const counterRef = useRef(0);
+
+  const handleClick = () => {
+    counterRef.current += 1;
+    forceRender({})
+  }
+
+  const [, forceRender] = useState({});
+  return (
+    <div className='App'>
+      <h1>{counterRef.current}</h1>
+      <button onClick={handleClick}>Increment</button>
+    </div>
+  );
+}
