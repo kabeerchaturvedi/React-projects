@@ -1,0 +1,18 @@
+import React, { useEffect, useState } from 'react'
+
+export default function App() {
+	const [message, setMessage] = useState('Hello World')
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setMessage('Goodbye World')
+		}, 5000)
+		return clearTimeout(timer)
+	}, [])
+
+	return (
+		<div className="App">
+			<h1>Message : {message}</h1>
+		</div>
+	)
+}
