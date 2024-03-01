@@ -1,0 +1,88 @@
+import React, { useState } from 'react'
+
+const App = () => {
+	const [formData, setFormData] = useState({
+		name: '',
+		email: '',
+		password: ''
+	})
+
+	const [errors, setErrors] = useState({})
+
+	const validationForm = () => {
+		let isValid = true
+		let newErrors = {}
+
+		//name
+		if (formData.name.trim()) {
+			newErrors.name = 'Name is not valid'
+			isValid = false
+		}
+		//email
+
+		const emailRegex =
+			/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+		if (formData.email.trim() || !emailRegex.test(formData.email)) {
+			newErrors.email = 'Email is not valid'
+			isValid = false
+		}
+
+		//password
+		if (formData.password.length < 6) {
+			newErrors.password = 'Password is not valid'
+			isValid = false
+		}
+		setErrors(newErrors)
+		return isValid
+	}
+
+	const handleSubmit = (e) => {
+		e.preventDefault()
+		if (validationForm()) {
+			console.log(formData);
+		} else {
+			console.log('failed to log data')
+		}
+	}
+
+	const handleChange = (e) => {
+		const { name, value } = e.target
+		setFormData({ ...formData, [name]: value })
+	}
+
+	return (
+		<div>
+			<form onSubmit={handleSubmit}>
+				<input
+					type="text"
+					placeholder="name"
+					id="name"
+					value={formData.name}
+					onChange={handleChange}
+				/>
+				{errors.name && <span className="error">{errors.name}</span>}
+				<input
+					type="email"
+					placeholder="email"
+					id="email"
+					value={formData.email}
+					onChange={handleChange}
+				/>
+				{errors.email && <span className="error">{errors.email}</span>}
+				<input
+					type="text"
+					placeholder="password"
+					id="password"
+					value={formData.password}
+					onChange={handleChange}
+				/>
+				{errors.password && (
+					<span className="error">{errors.password}</span>
+				)}
+				<button type="submit">Submit</button>
+			</form>
+		</div>
+	)
+}
+
+export default App;
