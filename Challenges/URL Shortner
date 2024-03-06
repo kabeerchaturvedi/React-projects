@@ -1,0 +1,58 @@
+import "./styles.css";
+import { useState } from "react";
+
+export default function App() {
+  const [originalUrl, setOriginalUrl] = useState("");
+  const [shortUrl, setShortUrl] = useState("");
+
+  const handleClick = async () => {
+    try {
+      const response = await axios.post(
+        "https://api-ssl.bitly.com/v4/shorten",
+        {
+          long_url: originalUrl,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "a6d50d6385c75ff31cf33fd17cac003f4f5f6d45", //YOUR_API_KEY
+          },
+        }
+      );
+      setShortUrl(response.data.id);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  return (
+    <div className="App">
+      <section className="landing-section">
+        <div className="row-container">
+          <div className="landing-box">
+            <h2 className="landing-title">URL Shortner</h2>
+            <div>
+              <label className="form-label">Enter URL Here</label>
+
+              <input
+                type="text"
+                placeholder="Enter URL"
+                className="form-control"
+                value={originalUrl}
+                onChange={(e) => setOriginalUrl(e.target.value)}
+              />
+            </div>
+            <button className="btn btn-primary mt-3" onClick={handleClick}>
+              Shorten
+            </button>
+            {shortUrl && (
+              <div className="mt-3">
+                <h4 className="landing-sub-heading">Shorten URL: </h4>
+                <button className="btn btn-primary">{shortenUrl}</button>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
