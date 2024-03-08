@@ -1,0 +1,24 @@
+import { useState } from "react";
+
+export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogin = () => {
+    setIsLoggedIn(!isLoggedIn);
+  };
+  const message = isLoggedIn ? "Logout" : "Login to see your profile";
+  return (
+    <div className="App">
+      <section className="landing-section">
+        <div className="row-container">
+          <h1 className="landing-heading">{message}</h1>
+          <div>
+            <button onClick={() => handleLogin()} className="btn btn-primary">
+              {isLoggedIn ? "Logout" : "Login"}
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
