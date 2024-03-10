@@ -1,0 +1,70 @@
+import "./styles.css";
+import { useEffect, useState } from "react";
+
+export default function Modal() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  return (
+    <div className="App">
+      <section className="landing-section">
+        <div className="row-container">
+          <h1 className="landing-heading"> React Modal</h1>
+          <div className="flex justify-center">
+            <button onClick={openModal}>Click here to see the modal</button>
+          </div>
+          <div className="modal-div">
+            {isModalOpen && (
+              <div className="custom-modal">
+                <h1 className="modal-heading">Modal Open</h1>
+                <p className="modal-para">Simple Modal example</p>
+                <button className="btn btn-danger" onClick={closeModal}>
+                  Close
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+
+####
+CSS :  
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.modal-div {
+  position: relative;
+}
+
+.custom-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width:50%
+  margin:auto;
+  padding:50px;
+  position:absolute;
+  top:50%;
+  left:50%
+  transform:translate(-50%,-50%);
+  border-radius:6px;
+  background:#2c3e50
+
+}
+
+.modal-heading .modal-para{
+  color: #ffffff;
+}
