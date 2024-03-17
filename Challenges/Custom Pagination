@@ -1,0 +1,74 @@
+import "./styles.css";
+import { useEffect, useState } from "react";
+
+export default function Pagination() {
+  const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const URL = `https://jsonplaceholder.typicode.com/posts?_page=${currentPage}&_limit=5`;
+
+  const fetchPosts = async (url) => {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const totalCountHeader = response.headers.get("X-Total-Count");
+      const totalCount = totalCountHeader ? parseInt(totalCountHeader, 10) : 0;
+      setTotalPages(Math.ceil(totalCount / 5));
+      setPosts(data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts(URL);
+  }, [currentPage]);
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  return (
+    <div className="App">
+      <section className="landing-section">
+        <div className="row-container">
+          <h1 className="title"> Posts</h1>
+          {posts.map((post) => {
+            return (
+              <div className="card" key={post.id}>
+                <h3>{post.title}</h3>
+                <p>{post.body}</p>
+              </div>
+            );
+          })}
+          <div>
+            <button
+              className="btn btn-primary"
+              onClick={handlePrevious}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span>{`Page ${currentPage} of ${totalPages}`}</span>
+            <button
+              className="btn btn-primary"
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
