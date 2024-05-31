@@ -1,0 +1,91 @@
+import React, { useState } from 'react'
+
+const Todo = () => {
+	const [todo, setTodo] = useState([])
+	const [newTodo, setNewTodo] = useState('')
+	const [editTodo, setEditTodo] = useState(null)
+
+	const addTodo = () => {
+		if (newTodo.trim() === '') {
+			return
+		}
+
+		if (editTodo) {
+			const updatedTodo = todo.map((t) => {
+				return t.id === editTodo.id ? { ...t, text: newTodo } : t
+			})
+			setTodo(updatedTodo)
+			setEditTodo(null)
+		} else {
+			setTodo([...todo, { id: Date.now(), text: newTodo }])
+			setNewTodo('')
+		}
+
+		const editTodo = (id) => {
+			const editingTodo = todo.find((t) => t.id === id)
+			setNewTodo(editingTodo.text)
+			setEditTodo(editingTodo)
+		}
+
+		const removeTodo = (id) => {
+			const filteredTodo = todo.filter((t) => t.id !== id)
+			setTodo(filteredTodo)
+			if (editTodo === id) {
+				setEditTodo(null)
+				setNewTodo('')
+			}
+		}
+
+		return (
+			<section className="landing-section">
+				<div className="row-container">
+					<div className="todos">
+						<h1 className="heading">Todo App</h1>
+						<div>
+							<input
+								type="text"
+								className="form-control"
+								value="{newTodo}"
+								onChange={(e) => setNewTodo(e.target.value)}
+							/>
+							<button
+								className="btn btn-primary"
+								onClick={() => addTodo([...todo, newTodo])}
+							>
+								{editTodo !== null ? 'Update Todo' : 'Add Todo'}
+							</button>
+						</div>
+					</div>
+					<div>
+						<ul>
+							{todo.map((t) => {
+								;<li key={t.id}>
+									<input
+										type="text"
+										className="form-control"
+										value={t.text}
+										readOnly={true}
+									/>
+									<button
+										className="btn btn-primary"
+										onClick={() => editTodo(t.id)}
+									>
+										Edit
+									</button>
+									<button
+										className="btn btn-primary"
+										onClick={() => removeTodo(t.id)}
+									>
+										Delete
+									</button>
+								</li>
+							})}
+						</ul>
+					</div>
+				</div>
+			</section>
+		)
+	}
+}
+
+export default Todo
