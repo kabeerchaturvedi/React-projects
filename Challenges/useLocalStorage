@@ -1,0 +1,36 @@
+import React, { useState, useEffect } from 'react'
+
+const About = () => {
+	const [data, setData] = useLocalStorage('myData', [])
+
+	const fetchData = () => {
+		try {
+			fetch('https://jsonplaceholder.typicode.com/users')
+				.then((response) => response.json())
+				.then((json) => setData(json))
+		} catch (error) {
+			console.log(error.message)
+		}
+	}
+	return (
+		<div>
+			<button className="btn btn-primary" onClick={fetchData}>
+				Fetch Data
+			</button>
+			<p>{JSON.stringify(data)}</p>
+		</div>
+	)
+}
+
+export default About
+
+const useLocalStorage = (key, initialValue) => {
+	const storedValue = localStorage.getItem('key') || initialValue
+
+	const [value, setValue] = useState(storedValue)
+
+	useEffect(() => {
+		localStorage.setItem('key', value)
+	}, [key, value])
+	return [value, setValue]
+}
