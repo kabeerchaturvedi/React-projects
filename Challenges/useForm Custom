@@ -1,0 +1,61 @@
+import React, { useState } from 'react';
+
+const App = () => {
+	const { values, handleChange, handleSubmit, reset } = useForm({
+		username: '',
+		password: ''
+	});
+
+	const handleFormSubmit = (formData) => {
+		console.log(formData);
+		reset();
+	};
+
+	return (
+		<div>
+			<form onSubmit={(e) => handleSubmit(e, handleFormSubmit)}>
+				<input
+					type="text"
+					name="username"
+					value={values.username}
+					onChange={handleChange}
+				/>
+				<input
+					type="text"
+					name="password"
+					value={values.password}
+					onChange={handleChange}
+				/>
+				<button type="submit">Submit</button>
+				<button type="button" onClick={reset}>
+					Reset
+				</button>
+			</form>
+		</div>
+	);
+};
+
+export default App;
+
+const useForm = (initialValues = {}) => {
+	const [values, setValues] = useState(initialValues);
+
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setValues((prevValues) => ({
+			...prevValues,
+			[name]: value
+		}));
+	};
+
+	const handleSubmit = (e, callback) => {
+		e.preventDefault();
+		callback(values);
+	};
+
+	const reset = () => {
+		setValues(initialValues);
+	};
+
+	return { values, handleChange, handleSubmit, reset };
+};
