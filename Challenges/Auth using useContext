@@ -1,0 +1,87 @@
+import React, { useState, useContext } from 'react'
+import { createContext } from 'react'
+
+const LoginForm = ({ onLogin }) => {
+	const [username, setUsername] = useState('')
+	const [password, setPassword] = useState('')
+
+	const handleSubmit = (event) => {
+		event.preventDefault()
+		onLogin(username, password)
+	}
+
+	return (
+		<form onSubmit={handleSubmit}>
+			<label>
+				Username:
+				<input
+					type="text"
+					value={username}
+					onChange={(event) => setUsername(event.target.value)}
+				/>
+			</label>
+			<label>
+				Password:
+				<input
+					type="password"
+					value={password}
+					onChange={(event) => setPassword(event.target.value)}
+				/>
+			</label>
+			<button type="submit" className="btn btn-primary">
+				Login
+			</button>
+		</form>
+	)
+}
+
+const Auth = () => {
+	const { user, login, logout } = useAuth()
+
+	const handleLogin = (username, password) => {
+		login(username, password)
+	}
+
+	return (
+		<section>
+			<div>
+				{user ? (
+					<div>
+						<h1>Welcome, {user.username}!</h1>
+						<button onClick={logout} className="btn btn-danger">
+							Logout
+						</button>
+					</div>
+				) : (
+					<LoginForm onLogin={handleLogin} />
+				)}
+			</div>
+		</section>
+	)
+}
+
+export default Auth
+
+const AuthContext = createContext()
+
+export const AuthProvider = ({ children }) => {
+	const [user, setUser] = useState(null)
+
+	const login = (username, password) => {
+		setUser({ username })
+	}
+
+	const logout = () => {
+		setUser(null)
+	}
+
+	return (
+		<AuthContext.Provider value={{ user, login, logout }}>
+			{children}
+		</AuthContext.Provider>
+	)
+}
+
+export const useAuth = () => {
+	return useContext(AuthContext)
+}
