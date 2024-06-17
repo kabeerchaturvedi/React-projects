@@ -1,0 +1,55 @@
+import React, { useState, useCallback } from 'react'
+
+const Challenge = () => {
+	const [fields, setFields] = useState([{ id: 1, value: '' }])
+
+	const addField = useCallback(() => {
+		setFields((prevFields) => ({
+			...prevFields,
+			id: prevFields.id + 1,
+			value: ''
+		}))
+	}, [fields])
+
+	const removeField = useCallback(
+		(id) => {
+			setFields((prevFields) =>
+				prevFields.filter((field) => field.id !== id)
+			)
+		},
+		[fields]
+	)
+
+	const handleInputChange = useCallback(
+		(value, id) => {
+			const updatedFields = fields.map((field) =>
+				field.id === id ? { ...field, value } : field
+			)
+			setFields(updatedFields)
+		},
+		[fields]
+	)
+	return (
+		<div>
+			<h1>Dynamic Form</h1>
+			{fields &&
+				fields.map((field) => (
+					<div key={field.id}>
+						<label>{`Field ${field.id}:`}</label>
+						<input
+							type="text"
+							onChange={(e) =>
+								handleInputChange(e.target.value, field.id)
+							}
+						/>
+						<button onClick={() => removeField(field.id)}>
+							Delete Field
+						</button>
+					</div>
+				))}
+			<button onClick={addField}>Add field</button>
+		</div>
+	)
+}
+
+export default Challenge
