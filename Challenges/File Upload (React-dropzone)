@@ -1,0 +1,94 @@
+import React, { useState, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
+
+const App = () => {
+  const FileUpload = () => {
+    const [files, setFiles] = useState([]);
+    const onDrop = useCallback(
+      (acceptedFiles) => {
+        const newFiles = acceptedFiles.map((file) => ({
+          file,
+          content: URL.createObjectURL(file),
+          type: file.type.startsWith("image/")
+            ? "image"
+            : file.type === "application/pdf"
+            ? "pdf"
+            : "text",
+        }));
+        setFiles([...files, ...newFiles]);
+      },
+      [files]
+    );
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+      onDrop,
+    });
+
+    const handleDelete = (index) => {
+      const updatedFiles = [...files];
+      updatedFiles.splice(index, 1);
+      setFiles(updatedFiles);
+    };
+
+    return (
+      <div>
+        <div {...getRootProps()} style={dropZoneStyle}>
+          <input {...getInputProps()} />
+          <p> Drag & Drop files here or click to select files</p>
+        </div>
+        {files.length > 0 && (
+          <div>
+            <h2> Files </h2>
+            {files.map((file, index) => (
+              <div key={index} style={{ marginBottom: "20px" }}>
+                {/* Image */}
+                {file.type === "image" && (
+                  <img
+                    src={file.content}
+                    alt={`File ${index}`}
+                    style={{ maxWidth: "100%", maxHeight: "100%" }}
+                  />
+                )}
+                {/* PDF */}
+                {file.type === "pdf" && (
+                  <embed
+                    src={file.content}
+                    type="application/pdf"
+                    width="200px"
+                    height="100px"
+                  />
+                )}
+                {/* Text */}
+                {file.type === "text" && (
+                  <pre style={{ whiteSpace: "pre-wrap" }}>{file.content}</pre>
+                )}
+                <button className="btn btn-danger" onClick={handleDelete}>
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const dropZoneStyle = {
+    border: "2px dashed #0087F7",
+    borderRadius: "4px",
+    padding: "20px",
+    textAlign: "center",
+    cursor: "pointer",
+    marginTop: "20px",
+  };
+
+  return (
+    <section>
+      <div>
+        <h1>File upload</h1>
+        <FileUpload />
+      </div>
+    </section>
+  );
+};
+
+export default App;
