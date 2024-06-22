@@ -1,0 +1,52 @@
+import React, { useState } from "react";
+import { FaAngleUp, FaAngleDown } from "react-icons/fa";
+
+const Accordion = ({ items }) => {
+  console.log(items);
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  const handleClick = (index) => {
+    setActiveIndex(index === activeIndex ? null : index);
+  };
+
+  return (
+    <div className="main" style={{ width: "300px", margin: "10px auto" }}>
+      {items.map((item, index) => (
+        <div className="title" key={index}>
+          <div
+            onClick={() => handleClick(index)}
+            style={{
+              padding: "12px",
+              cursor: "pointer",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              fontWeight: "bold",
+              backgroundColor: "#fff",
+            }}
+          >
+            {" "}
+            {item.title}
+            <div className="toggle">
+              {index === activeIndex ? <FaAngleUp /> : <FaAngleDown />}
+            </div>
+          </div>
+          {index === activeIndex && (
+            <div className="content">{item.content}</div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const App = () => {
+  const AccordionItem = [
+    { title: "Title 1", content: "Content 1" },
+    { title: "Title 2", content: "Content 2" },
+    { title: "Title 3", content: "Content 3" },
+  ];
+
+  return <Accordion items={AccordionItem} />;
+};
+export default App;
