@@ -1,0 +1,36 @@
+import React, { useState } from 'react'
+
+const ChildComponent = ({ onUpdateParentState }) => {
+	const [childState, setChildState] = useState('initial child state')
+
+	const updateChildState = () => {
+		const modifiedChildState = 'Updated child state'
+		setChildState(modifiedChildState)
+		onUpdateParentState()
+	}
+	return (
+		<div>
+			<h2>Child Component</h2>
+			<p>Child state: {childState}</p>
+			<button onClick={updateChildState}>Update Parent State</button>
+		</div>
+	)
+}
+
+const App = () => {
+	const [parentState, setParentState] = useState('initial parent state')
+
+	const updateParentState = () => {
+		const modifiedParentState = 'modified parent state'
+		setParentState(modifiedParentState)
+	}
+	return (
+		<div>
+			<h1>Parent Component</h1>
+			<p>Parent state: {parentState}</p>
+			<ChildComponent onUpdateParentState={updateParentState} />
+		</div>
+	)
+}
+
+export default App
