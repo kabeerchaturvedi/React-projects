@@ -1,0 +1,96 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+const App = () => {
+  const [amount, setAmount] = useState("");
+  const [fromCurrency, setFromCurrency] = useState("USD");
+  const [toCurrency, setToCurrency] = useState("EUR");
+  const [convertedAmount, setConvertedAmount] = useState(null);
+  const [exchangeRate, setExchangeRate] = useState(null);
+
+  useEffect(() => {
+    const URL = `https://v6.exchangerate-api.com/v6/df9ccd0bc053d242aaa58e51/pair/${fromCurrency}/${toCurrency}`;
+
+    const getExchangeRate = async (uri) => {
+      try {
+        const response = await axios.get(uri);
+        const rate = response.data.conversion_rate; // Correct property name
+        setExchangeRate(rate);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    if (fromCurrency !== toCurrency) {
+      getExchangeRate(URL);
+    } else {
+      setExchangeRate(1);
+    }
+  }, [fromCurrency, toCurrency]);
+
+  const handleAmountChange = (event) => {
+    setAmount(event.target.value);
+  };
+
+  const handleFromCurrencyChange = (event) => {
+    setFromCurrency(event.target.value);
+  };
+
+  const handleToCurrencyChange = (event) => {
+    setToCurrency(event.target.value);
+  };
+
+  const handleConvert = () => {
+    if (!isNaN(amount) && exchangeRate) {
+      const convertedValue = amount * exchangeRate;
+      setConvertedAmount(convertedValue.toFixed(2));
+    }
+  };
+
+  return (
+    <section>
+      <div>
+        <h1>Exchange Rate</h1>
+        <div>
+          <label>
+            Amount:{" "}
+            <input type="number" value={amount} onChange={handleAmountChange} />
+          </label>
+        </div>
+        <div>
+          <label>
+            From Currency:
+            <select value={fromCurrency} onChange={handleFromCurrencyChange}>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+            </select>
+          </label>
+        </div>
+
+        <div>
+          <label>
+            To Currency:
+            <select value={toCurrency} onChange={handleToCurrencyChange}>
+              <option value="INR">INR</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+            </select>
+          </label>
+        </div>
+
+        <button className="btn btn-primary" onClick={handleConvert}>
+          Convert
+        </button>
+
+        {convertedAmount && (
+          <p>
+            Converted Amount: {convertedAmount} {toCurrency}
+          </p>
+        )}
+      </div>
+    </section>
+  );
+};
+
+export default App;
