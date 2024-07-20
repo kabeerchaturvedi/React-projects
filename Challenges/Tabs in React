@@ -1,0 +1,67 @@
+import React, { useState } from "react";
+
+const Tab = ({ label, isActive, onClick }) => {
+  return (
+    <button className={`tab ${isActive ? "active" : ""}`} onClick={onClick}>
+      {label}
+    </button>
+  );
+};
+
+const TabContent = ({ children, isActive }) => {
+  return (
+    <div className={`tab-content ${isActive ? "active" : ""}`}>{children}</div>
+  );
+};
+
+const Tabs = ({ children }) => {
+  const [activeTab, setActiveTab] = useState(0);
+
+  const handleClick = (index) => {
+    setActiveTab(index);
+  };
+
+  return (
+    <section className="landing-section">
+      <div className="container">
+        <div className="tabs">
+          <div className="tab-list">
+            {children.map((child, index) => (
+              <Tab
+                key={index}
+                label={child.props.label}
+                isActive={activeTab === index}
+                onClick={() => handleClick(index)}
+              />
+            ))}
+          </div>
+          <div className="tab-content">
+            {children.map((child, index) => (
+              <TabContent key={index} isActive={activeTab === index}>
+                {child.props.children}
+              </TabContent>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const App = () => {
+  return (
+    <Tabs>
+      <div label="Tab 1">
+        <p>Content for tab 1</p>
+      </div>
+      <div label="Tab 2">
+        <p>Content for tab 2</p>
+      </div>
+      <div label="Tab 3">
+        <p>Content for tab 3</p>
+      </div>
+    </Tabs>
+  );
+};
+
+export default App;
