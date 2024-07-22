@@ -1,0 +1,66 @@
+import React, { useState } from "react";
+
+const App = () => {
+  const [formData, setFormData] = useState({
+    fields: [{ name: "", value: "" }],
+  });
+
+  const handleChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...formData.fields];
+    list[index][name] = value;
+    setFormData({ fields: list });
+  };
+
+  const addField = () => {
+    const list = [...formData.fields];
+    list.push({ name: "", value: "" });
+    setFormData({ fields: list });
+  };
+
+  const removeFormFields = (index) => {
+    const list = [...formData.fields];
+    list.splice(index, 1);
+    setFormData({ fields: list });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData.fields);
+  };
+  return (
+    <section>
+      <div>
+        <form onSubmit={handleSubmit}>
+          {formData.fields.map((field, index) => (
+            <div key={index}>
+              <input
+                type="text"
+                placeholder="Name"
+                name="name"
+                value={field.name}
+                onChange={(e) => handleChange(e, index)}
+              />
+              <input
+                type="text"
+                placeholder="value"
+                name="value"
+                value={field.value}
+                onChange={(e) => handleChange(e, index)}
+              />
+              <button type="button" onClick={() => removeFormFields(index)}>
+                Remove
+              </button>
+            </div>
+          ))}
+          <button type="button" onClick={addField}>
+            Add field
+          </button>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </section>
+  );
+};
+
+export default App;
