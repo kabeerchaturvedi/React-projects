@@ -1,0 +1,52 @@
+import React, { useState, useEffect } from "react";
+
+const App = () => {
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+
+  useEffect(() => {
+    const getSuggestions = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(
+          `https://jsonplaceholder.typicode.com/users?q=${query}`
+        );
+        const data = await res.json();
+        setSuggestions(data);
+        console.log(data);
+      } catch (error) {
+        console.log(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    //fetch suggestions only if the query is not empty
+    if (query.trim() !== "") {
+      getSuggestions();
+    } else {
+      setSuggestions([]);
+    }
+  }, [query]);
+
+  const handleInputChange = (event) => {
+    setQuery(event.target.value);
+  };
+  return (
+    <div className="App">
+      <input
+        type="text"
+        placeholder="Type to search"
+        value={query}
+        onChange={handleInputChange}
+      />
+      {loading && <p>Loading...</p>}
+      {suggestions.length > 0 &&
+        suggestions.map((suggestion) => (
+          <li key={suggestion.id}>{suggestion.name}</li>
+        ))}
+    </div>
+  );
+};
+
+export default App;
