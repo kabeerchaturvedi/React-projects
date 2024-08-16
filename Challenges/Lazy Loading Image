@@ -1,0 +1,42 @@
+import React, { useRef, useState, useEffect } from "react";
+
+const LazyImage = ({ src, alt, className }) => {
+  const imageRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      const [entry] = entries;
+      setIsVisible(entry.isIntersecting);
+    });
+    {
+      threshold: 0.5;
+    }
+    observer.observe(imageRef.current);
+    return () => {
+      observer.unobserve(imageRef.current);
+    };
+  }, []);
+
+  return (
+    <img
+      ref={imageRef}
+      src={isVisible ? src : ""}
+      alt={alt}
+      className={className}
+    />
+  );
+};
+
+const App = () => {
+  return (
+    <div>
+      <h1>Lazy loading</h1>
+      <LazyImage
+        src="https://imgd.aeplcdn.com/642x336/n/cw/ec/151565/royalenfield-interceptor-left-side-view0.jpeg?isig=0&q=80"
+        alt="lazy-loaded"
+        className="bike"
+      />
+    </div>
+  );
+};
+export default App;
