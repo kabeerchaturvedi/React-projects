@@ -1,0 +1,39 @@
+// This is a live demo! Click anywhere to edit.
+// Write code or comments!
+// Convert HTML string to DOM object
+import useState from "react";
+import Select from "react-select";
+const multiSelect = () => {
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  const options = [
+    { label: "Option 1", value: "1" },
+    { label: "Option 2", value: "2" },
+    { label: "Option 3", value: "3" },
+    { label: "Option 4", value: "4" },
+    { label: "Option 5", value: "5" },
+  ];
+
+  const handleChange = (selectedOptions) => {
+    setSelectedOptions(selectedOptions);
+  };
+  return (
+    <div>
+      <h2>Selected Options</h2>
+      <Select
+        isMulti
+        name="colors"
+        options={options}
+        className="basic-multi-select"
+        classNamePrefix="select"
+        onChange={handleChange}
+        value={selectedOptions}
+      />
+      <div>Selected option are:</div>
+      {selectedOptions.map((option) => (
+        <div key={option.value}>{option.label}</div>
+      ))}
+    </div>
+  );
+};
+export default multiSelect;
