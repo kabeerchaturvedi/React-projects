@@ -1,0 +1,30 @@
+import React, { useState, useEffect } from "react";
+
+const BreadCrumb = () => {
+  const [breadCrumbs, setBreadCrumbs] = useState([]);
+
+  useEffect(() => {
+    const breadCrumbData = [
+      { label: "Home", path: "/" },
+      { label: "About", path: "/about" },
+      { label: "Service", path: "/service" },
+      { label: "Contact", path: "/contact" },
+    ];
+    setBreadCrumbs(breadCrumbData);
+  }, []);
+
+  return (
+    <nav aria-label="breadcrumb">
+      <ol className="breadcrumb">
+        {breadCrumbs.map((breadCrumb, index) => (
+          <li key={index}>
+            index === breadCrumbs.length - 1 ? (<span>{breadCrumb.label}</span>):(
+            <a href={breadCrumb.path}>{breadCrumb.label}</a>)
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+};
+
+export default BreadCrumb;
