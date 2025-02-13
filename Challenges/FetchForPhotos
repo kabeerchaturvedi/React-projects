@@ -1,0 +1,46 @@
+import { useEffect, useState } from "react";
+import "./styles.css";
+
+export default function App() {
+  const [groupedPhotos, setGroupedPhotos] = useState({});
+
+  const url = "https://jsonplaceholder.typicode.com/photos";
+
+  useEffect(() => {
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        // Custom function to group photos by albumId
+        const groupByAlbumId = (photos) => {
+          const grouped = {};
+          photos.forEach((photo) => {
+            if (!grouped[photo.albumId]) {
+              grouped[photo.albumId] = [];
+            }
+            grouped[photo.albumId].push(photo);
+          });
+          return grouped;
+        };
+
+        const groupedByAlbumId = groupByAlbumId(data);
+        setGroupedPhotos(groupedByAlbumId);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
+
+  return (
+    <div className="App">
+      {Object.entries(groupedPhotos).map(([albumId, photos]) => (
+        <div key={albumId}>
+          <h2>Album ID: {albumId}</h2>
+          {/* {photos.map((photo) => (
+            <div key={photo.id}>
+              <p>{photo.title}</p>
+              <img src={photo.thumbnailUrl} alt={photo.title} />
+            </div>
+          ))} */}
+        </div>
+      ))}
+    </div>
+  );
+}
