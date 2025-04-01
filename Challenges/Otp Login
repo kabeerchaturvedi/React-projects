@@ -1,0 +1,103 @@
+import React, { useState } from "react";
+import OtpInput from "react-otp-input";
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUserName] = useState("");
+
+  const handleLogin = (username) => {
+    setIsLoggedIn(true);
+    setUserName(username);
+  };
+  const handleLogOut = () => {
+    setIsLoggedIn(false);
+    setUserName("");
+  };
+  return (
+    <section>
+      <div>
+        {isLoggedIn ? (
+          <div>
+            <h1>Welcome, {username} </h1>
+            <button onClick={handleLogOut}>Logout</button>
+          </div>
+        ) : (
+          <OtpLogin onLogin={handleLogin} />
+        )}
+      </div>
+    </section>
+  );
+};
+
+export default App;
+
+const OtpLogin = ({ onLogin }) => {
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [error, setError] = useState("");
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const validateEmail = (email) => {
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    return isValidEmail;
+  };
+
+  const handleEmailVerification = () => {
+    if (validateEmail(email)) {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        setIsEmailVerified(true);
+      }, 2000);
+    } else {
+      setError("Invalid email format");
+    }
+  };
+
+  const handleOtpVerification = () => {
+    const enterOTP = otp.join("");
+    if (/^\d{4}$/.test(enterOTP)) {
+      const username = email.split("@")[0].charAt(0).toUpperCase() + email.split("@")[0].slice(1);
+      onLogin(username);
+    } else {
+      setError("Invalid OTP format");
+    }
+  };
+  return (
+    <div>
+      {isEmailVerified ? (
+        <>
+          <h1>Enter Your Email</h1>
+          <input type="text" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          {error && <p>{error}</p>}
+          <div>
+            <button onClick={handleEmailVerification}>Verify Email</button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div>
+            <h1>Enter Your OTP</h1>
+            <OtpInput
+              value={otp.join("")}
+              onChange={(value) => setOtp(value.split(""))}
+              numInputs={4}
+              inputStyle={{
+                width: "3rem",
+                heigh: "3rem",
+                margin: "0 0 0.2rem",
+                fontSize: "1.5rem",
+                borderRadius: "4px",
+                border: "1px solid black",
+              }}
+              renderInput={(inputProps, index) => <input {...inputProps} key={index} />}
+            />
+          </div>
+          <span>{error && <p>{error}</p>}</span>
+          <div>
+            <button onClick={handleOtpVerification}>Login</button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
