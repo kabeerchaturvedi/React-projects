@@ -1,0 +1,59 @@
+import { useState } from "react";
+
+export const App = () => {
+  const [categories, setCategories] = useState("");
+  const [subCategory, setSubCategory] = useState("");
+  const [isSubCategoryEnabled, setIsSubCategoryEnabled] = useState(false);
+
+  const category = ["Fruits", "Vegetables", "Dairy"];
+  const subCategories = {
+    Fruits: ["Apple", "Banana"],
+    Vegetables: ["Carrot", "Broccoli"],
+    Dairy: ["Milk", "Cheese"],
+  };
+
+  const handleCategoryChange = (selectedCategory) => {
+    setCategories(selectedCategory);
+    setSubCategory("");
+    setIsSubCategoryEnabled(true);
+  };
+
+  const handleSubCategoryChange = (selectedSubCategory) => {
+    setSubCategory(selectedSubCategory);
+  };
+
+  return (
+    <div>
+      <label>Select Category</label>
+      <select
+        id="category"
+        onChange={(e) => handleCategoryChange(e.target.value)}
+        value={categories}
+      >
+        <option value="">Select</option>
+        {category.map((item) => (
+          <option key={item} value={item}>
+            {item}
+          </option>
+        ))}
+      </select>
+      <br />
+
+      <label>Select SubCategory</label>
+      <select
+        id="subCategories"
+        onChange={(e) => handleSubCategoryChange(e.target.value)}
+        value={subCategory}
+        disabled={!isSubCategoryEnabled}
+      >
+        <option value="">Select</option>
+        {isSubCategoryEnabled &&
+          subCategories[categories]?.map((subItem) => (
+            <option key={subItem} value={subItem}>
+              {subItem}
+            </option>
+          ))}
+      </select>
+    </div>
+  );
+};
