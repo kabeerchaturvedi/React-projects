@@ -1,0 +1,60 @@
+import { useState } from "react";
+
+export const App = () => {
+  const [principal, setPrincipal] = useState("");
+  const [intrestRate, setIntrestRate] = useState("");
+  const [tenure, setTenure] = useState("");
+  const [emi, setEmi] = useState(null);
+
+  const calculateEMI = () => {
+    const p = parseFloat(principal);
+    const r = parseFloat(intrestRate) / (12 * 100); //monthly
+    const n = parseFloat(tenure);
+
+    if (p > 0 && r > 0 && n > 0) {
+      const emiValue = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+      setEmi(emiValue.toFixed(2));
+    } else {
+      setEmi(null);
+    }
+  };
+  return (
+    <section>
+      <div>
+        <h2>EMI</h2>
+        <div>
+          <label>Loan Amount:</label>
+          <input
+            type="number"
+            placeholder="Enter your amount"
+            value={principal}
+            onChange={(e) => setPrincipal(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Interest Rate:</label>
+          <input
+            type="number"
+            placeholder="Enter your Interest Rate"
+            value={intrestRate}
+            onChange={(e) => setIntrestRate(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Loan Tenure:</label>
+          <input
+            type="number"
+            placeholder="Enter your Loan Tenure"
+            value={tenure}
+            onChange={(e) => setTenure(e.target.value)}
+          />
+        </div>
+        <button className="btn-primary" onClick={calculateEMI}>
+          Calculate EMI
+        </button>
+        {emi !== null && <h1> EMI : {emi}</h1>}
+      </div>
+    </section>
+  );
+};
+export default App;
