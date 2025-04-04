@@ -1,0 +1,32 @@
+import { useEffect, useState } from "react";
+
+export const App = () => {
+  const [initial, setInitial] = useState(0);
+  const [isIncrementing, setIsIncrementing] = useState(false);
+
+  const toggleIncrementing = () => {
+    setIsIncrementing(!isIncrementing);
+  };
+
+  const incrementCounter = () => {
+    setInitial((initial) => initial + 1);
+  };
+
+  useEffect(() => {
+    let interval;
+    if (isIncrementing) {
+      interval = setInterval(incrementCounter, 10);
+    }
+    return () => clearInterval(interval);
+  }, [isIncrementing, initial]);
+
+  return (
+    <div>
+      <h1>Initial Value is:{initial}</h1>
+      <button onClick={toggleIncrementing}>
+        {isIncrementing ? "Pause" : "Start"}
+      </button>
+    </div>
+  );
+};
+export default App;
