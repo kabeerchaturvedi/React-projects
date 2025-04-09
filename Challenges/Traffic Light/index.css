@@ -1,0 +1,23 @@
+.light {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: gray;
+  opacity: 0.3;
+}
+
+.red {
+  background-color: red;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.green {
+  background-color: green;
+}
+
+.active {
+  opacity: 1;
+}
