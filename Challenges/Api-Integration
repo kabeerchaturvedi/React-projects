@@ -1,0 +1,81 @@
+import { useState } from "react";
+
+export const App = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    //API Call
+    const apiEndpoint = `https://questions.greatfrontend.com/api/questions/contact-form`;
+
+    try {
+      const response = await fetch(apiEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) {
+        throw new Error("Network response error");
+      }
+      const data = await response.text();
+      console.log(data);
+      setFormData({
+        name: "",
+        email: "",
+        message: "",
+      });
+    } catch (error) {
+      console.log(error, "Error in sending data");
+    }
+  };
+  return (
+    <section>
+      <div className="row container">
+        <form className="form" onSubmit={handleSubmit}>
+          <label htmlFor="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            value={formData.name}
+            onChange={handleChange}
+          />
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <label htmlFor="message">Message:</label>
+          <textarea
+            id="message"
+            name="message"
+            required
+            value={formData.message}
+            onChange={handleChange}
+          />
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </section>
+  );
+};
+
+export default App;
